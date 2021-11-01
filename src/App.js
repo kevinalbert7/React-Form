@@ -24,27 +24,42 @@ class App extends React.Component {
     }
 
     test() {
-      
+
     }
 
     handleEmailChange(e) {
       console.log(e.target.value)
-      this.setState({ email: e.target.value })
+      const regex = /^[\w\.]+@([\w-]+\.)+[\w-]{2,4}$/
+      let validEmail = regex.test(e.target.value)
+      this.setState({ email: e.target.value})
+        if ( validEmail === true ) {
+          this.setState({ emailIsValid: true })
+        }
     }
 
     handlePasswordChange(e) {
-      console.log(e.target.value)
+      let validPassword = e.target.value.length
       this.setState({ password: e.target.value })
+      if ( validPassword === 5 ) {
+        this.setState({ validPassword: true })
+      }
     }
 
     handleRememberMeChange(e) {
+      if ( this.state.rememberMe === true && e.target.value === "off") {
+        this.setState({ rememberMe: false })
+      } else {
+        this.setState({ rememberMe: true })
+      }
       this.setState({ rememberMe: e.target.value })
     }
 
     handleSubmit(e) {
       e.preventDefault()
-      this.setState({ submit: e.target.value })
+      if (this.state.emailIsValid && this.state.passwordIsValid) {
+        this.setState({ isSubmitted: true })
       }
+    }
 
 
     render() {
@@ -59,6 +74,7 @@ class App extends React.Component {
                 className="form-control" 
                 placeholder="Enter email..."
                 onFocus=""
+                value={this.state.email}
                 onChange={this.handleEmailChange}
                 />
               </div>
@@ -77,14 +93,16 @@ class App extends React.Component {
                 <input 
                 type="checkbox" 
                 className="form-check-input"
+                onChange={this.handleRememberMeChange}
                 />
                 <label className="form-check-label">Remember Me</label>
               </div>
                 <button 
                 type="submit" 
                 className="btn btn-primary"
-                onChange={this.handleSubmit}
-                >Submit</button>
+                onChange={this.handleSubmit}>
+                Submit
+                </button>
             </form>
           </div>
         
